@@ -24,11 +24,8 @@ int makeTree(int iSize, int* paiArray)
 	
 	int iCount;		// 配列を数え上げる
 	int iData;
-	unsigned char cIsLeft;
 	TREENODE* pstNew;
-	TREENODE* pstParent;
-	TREENODE* pstForcus;
-
+	TREENODE** ppstParentPtr;
 	
 	// 木構造の初期化
 	pstRoot = NULL;
@@ -54,33 +51,21 @@ int makeTree(int iSize, int* paiArray)
 		}
 
 		// 木構造をたどって、新葉の親を取得
-		pstForcus = pstRoot;
-		pstParent = NULL;
-		cIsLeft = 0;
-		while (pstForcus != NULL)
+		ppstParentPtr = &pstRoot;
+		while (*ppstParentPtr != NULL)
 		{
-			pstParent = pstForcus;
-			if (iData < (*pstForcus).iData)
+			if (iData < (**ppstParentPtr).iData)
 			{
-				pstForcus = (*pstForcus).pstLeftChild;
-				cIsLeft = 1;
+				ppstParentPtr = &(**ppstParentPtr).pstLeftChild;
 			}
 			else 
 			{
-				pstForcus = (*pstForcus).pstRightChild;
-				cIsLeft = 0;
-			}
+				ppstParentPtr = &(**ppstParentPtr).pstRightChild;
+			};
 		}
 
 		// 取得した親の子に割り当てる
-		if (cIsLeft) 
-		{
-			(*pstParent).pstLeftChild = pstNew;
-		}
-		else 
-		{
-			(*pstParent).pstRightChild = pstNew;
-		}
+		*ppstParentPtr = pstNew;
 	}
 
 	return 0;
